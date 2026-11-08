@@ -1,0 +1,19 @@
+# Run outputs (each is saved with its config and git commit hash)
+results/
+
+# Project proposal is kept locally only
+docs/proposal.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local caches, logs, secrets
+.env
+.env.*
+wandb/
+*.log

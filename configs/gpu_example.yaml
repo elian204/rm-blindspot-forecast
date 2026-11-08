@@ -1,0 +1,45 @@
+# Example for a GPU machine. Compared to the CPU demo, the backend, devices, dtypes and
+# run size differ; the prompt and the reward model are the same.
+# Sampling (vLLM) and grading (transformers) hold GPU memory separately, so run
+# them as two stages:
+#   uv run python scripts/sample.py --config configs/gpu_example.yaml
+#   uv run python scripts/audit.py  --config configs/gpu_example.yaml \
+#       --samples results/gpu_example/samples.jsonl
+data:
+  dataset: gsm8k
+  split: test
+  n_problems: null  # all problems
+
+prompt:
+  template: |-
+    {problem}
+
+    Reason step by step, and put your final answer within \boxed{}.
+
+sampling:
+  model_id: Qwen/Qwen2.5-1.5B-Instruct
+  revision: 989aa7980e4cf806f80c7fef2b1adb7bc71aa306
+  backend: vllm
+  n_samples: 8
+  temperature: 1.0
+  top_p: 1.0
+  max_new_tokens: 1024
+  seed: 0
+  dtype: bfloat16  # use float16 on GPUs without bf16 support (e.g. Turing)
+  tensor_parallel_size: 1
+  gpu_memory_utilization: 0.85
+  max_model_len: 4096
+
+reward:
+  name: skywork_prm
+  model_id: Skywork/Skywork-o1-Open-PRM-Qwen-2.5-1.5B
+  revision: 98d69606595eedbdbbbf0a7d28efdcd462ba6a67
+  combine: min
+  device: cuda
+  dtype: bfloat16
+  batch_size: 16
+  max_length: 4096
+
+audit:
+  top_fraction: 0.25
+  output_dir: results/gpu_example

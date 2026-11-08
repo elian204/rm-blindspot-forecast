@@ -1,0 +1,40 @@
+# Tiny end-to-end demo on CPU: 10 GSM8K problems, 4 samples each.
+# It only shows that the pipeline runs; the numbers are not meaningful.
+data:
+  dataset: gsm8k
+  split: test
+  n_problems: 10
+
+prompt:
+  # "{problem}" is replaced by the question text. Versioned with the run.
+  template: |-
+    {problem}
+
+    Reason step by step, and put your final answer within \boxed{}.
+
+sampling:
+  model_id: Qwen/Qwen2.5-0.5B-Instruct
+  revision: 7ae557604adf67be50417f59c2c2f167def9a775
+  backend: hf
+  n_samples: 4
+  temperature: 1.0
+  top_p: 1.0
+  max_new_tokens: 256
+  seed: 0
+  device: cpu
+  dtype: float32
+  batch_size: 5
+
+reward:
+  name: skywork_prm
+  model_id: Skywork/Skywork-o1-Open-PRM-Qwen-2.5-1.5B
+  revision: 98d69606595eedbdbbbf0a7d28efdcd462ba6a67
+  combine: min  # min | last | prod | mean
+  device: cpu
+  dtype: float32
+  batch_size: 4
+  max_length: 4096
+
+audit:
+  top_fraction: 0.25
+  output_dir: results/demo_cpu

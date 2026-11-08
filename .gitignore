@@ -1,7 +1,7 @@
 # Run outputs (each is saved with its config and git commit hash)
 results/
 
-# Project proposal is kept locally only
+# Local-only document
 docs/proposal.pdf
 
 # Python
